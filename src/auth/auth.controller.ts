@@ -1,4 +1,13 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 
-@Controller('auth')
-export class AuthController {}
+@Controller('')
+export class AuthController {
+  @Post('/register')
+  userRegister(): string {
+    return 'User Register Success';
+  }
+  @Post('/register/admin')
+  adminRegister(): string {
+    return 'Admin Register Success';
+  }
+}
