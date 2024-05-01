@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  nama         String   @db.VarChar(50)
+  email        String   @unique @db.VarChar(100)
+  password     String   @db.VarChar(255)
+  tempat_lahir String   @db.VarChar(50)
+  tgl_lahir    DateTime
+  no_bpjs      String   @db.VarChar(18)
+  gender       String   @db.VarChar(1)
+  no_nik       String   @unique @db.VarChar(20)
+  gol_darah    String   @db.VarChar(1)
+  no_telepon   String   @db.VarChar(18)
+  reservations Reservation[] 
+  queue Queue[]
+
+  @@map("users")
+}
+
+model Schedule {
+  id Int @id @default(autoincrement())
+  nama_poli String @db.VarChar(50)
+  hari DayOfWeek
+  jam_buka String @db.VarChar(10)
+  jam_tutup String @db.VarChar(10)
+  kuota Int
+  reservations Reservation[]
+
+  @@map("schedules")
+}
+
+model Reservation {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userID], references: [id])
+  userID String
+  poli_klinik String @db.VarChar(50)
+  tanggal_daftar DateTime
+  schedule Schedule @relation(fields: [scheduleID], references: [id])
+  scheduleID Int
+  keluhan String @db.VarChar(255)
+  queue Queue[]
+
+  @@map("reservations")
+}
+
+model Queue {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userID], references: [id])
+  userID String
+  reservation Reservation @relation(fields: [reservationID], references: [id])
+  reservationID Int
+  kuota Int
+  terisi Int
+}
