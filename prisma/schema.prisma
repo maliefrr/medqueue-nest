@@ -23,6 +23,11 @@ enum DayOfWeek {
   SUNDAY
 }
 
+enum userRole {
+  ADMIN
+  PATIENT
+}
+
 model User {
   id           String   @id @default(uuid()) @db.VarChar(36)
   nama         String   @db.VarChar(50)
@@ -35,6 +40,7 @@ model User {
   no_nik       String   @unique @db.VarChar(20)
   gol_darah    String   @db.VarChar(1)
   no_telepon   String   @db.VarChar(18)
+  role         userRole
   reservations Reservation[] 
   queue Queue[]
 
